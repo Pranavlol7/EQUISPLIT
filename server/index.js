@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const tripRoutes = require('./Routes/trips');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -24,14 +25,12 @@ const tripSchema = new mongoose.Schema({
   totalAmount: { type: Number, required: true, min: 0 },
 });
 
-const Trip = mongoose.model('Trip', tripSchema);
+const Trip = require('./models/Trip');
 
-// Define a route for the root URL
 app.get('/', (req, res) => {
   res.send('Welcome to my backend server!');
 });
 
-// API routes for trips
 app.get('/api/trips', async (req, res) => {
   try {
     const trips = await Trip.find();
@@ -58,7 +57,7 @@ app.delete('/api/trips/:id', async (req, res) => {
       return res.status(404).json({ message: 'Trip not found' });
     }
     res.json(deletedTrip);
-  } catch (error) {
+  } catch (error) { 
     res.status(500).json({ message: 'Error deleting trip', error: error.message });
   }
 });
